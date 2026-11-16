@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulado Interativo de Inglês - 9º Ano (A2)</title>
+  <style>
+    /* Reset & Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #002147;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #000;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* Scrollbar Estilizada */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #dc2626;
+      border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #b91c1c;
+    }
+
+    /* Header e Navegação */
+    header {
+      width: 100%;
+      max-width: 850px;
+      margin-bottom: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo {
+      max-width: 180px;
+      height: auto;
+      margin-bottom: 15px;
+      display: block;
+      border: 3px solid #dc2626;
+      border-radius: 10px;
+      background-color: #001026;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    h1 {
+      color: #ffffff;
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+    }
+
+    .nav-grid {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      border: 2px solid #ffffff;
+      background-color: #001530;
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      background-color: #003366;
+    }
+
+    .nav-btn.active {
+      border-color: #f59e0b;
+      box-shadow: 0 0 8px #f59e0b;
+    }
+
+    .nav-btn.correct {
+      background-color: #16a34a !important;
+      border-color: #16a34a !important;
+      color: #fff;
+    }
+
+    .nav-btn.incorrect {
+      background-color: #dc2626 !important;
+      border-color: #dc2626 !important;
+      color: #fff;
+    }
+
+    /* Container Principal */
+    .container {
+      background-color: #ffffff;
+      border: 3px solid #dc2626;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 850px;
+      padding: 30px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 10px;
+    }
+
+    .question-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #000;
+    }
+
+    /* Pinned Text (Texto Fixo com Scroll) */
+    .pinned-text-box {
+      max-height: 240px;
+      overflow-y: auto;
+      background-color: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 4px solid #dc2626;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #000;
+    }
+
+    .pinned-text-box h4 {
+      margin-bottom: 8px;
+      color: #dc2626;
+    }
+
+    /* Enunciado */
+    .statement {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      color: #000;
+      font-weight: 500;
+    }
+
+    /* Caixa de Diálogo Destacado */
+    .dialogue-box {
+      background-color: #f1f5f9;
+      border-left: 4px solid #002147;
+      padding: 12px 15px;
+      margin: 12px 0;
+      border-radius: 4px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .highlight-sentence {
+      background-color: #fef08a;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+
+    /* Opções de Resposta */
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 12px 15px;
+      border: 2px solid #cbd5e1;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+      background-color: #fff;
+    }
+
+    .option-item:hover {
+      background-color: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    .option-item input[type="radio"] {
+      margin-top: 4px;
+      margin-right: 12px;
+      cursor: pointer;
+    }
+
+    .option-text {
+      font-size: 1rem;
+      color: #000;
+      line-height: 1.4;
+    }
+
+    .option-item.selected {
+      border-color: #dc2626;
+      background-color: #fef2f2;
+    }
+
+    .option-item.correct-bg {
+      background-color: #dcfce7 !important;
+      border-color: #16a34a !important;
+    }
+
+    .option-item.incorrect-bg {
+      background-color: #fee2e2 !important;
+      border-color: #dc2626 !important;
+    }
+
+    /* Justificativa / Feedback */
+    .feedback-box {
+      display: none;
+      background-color: #f8fafc;
+      border-left: 4px solid #0284c7;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #000;
+    }
+
+    .feedback-box.show {
+      display: block;
+    }
+
+    .feedback-box strong {
+      color: #0284c7;
+    }
+
+    /* Botões de Ação na Ordem Obrigatória: [ Next ] [ Check ] [ Previous ] */
+    .action-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .btn {
+      background-color: #dc2626;
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      flex: 1;
+      max-width: 150px;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background-color: #b91c1c;
+    }
+
+    .btn:disabled {
+      background-color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .btn-finish {
+      background-color: #16a34a;
+      max-width: 200px;
+    }
+
+    .btn-finish:hover {
+      background-color: #15803d;
+    }
+
+    /* Modal de Resultado Final */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.75);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background-color: #ffffff;
+      border: 3px solid #dc2626;
+      border-radius: 10px;
+      max-width: 650px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 30px;
+      color: #000;
+    }
+
+    .modal-header {
+      text-align: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 10px;
+    }
+
+    .modal-header h2 {
+      color: #dc2626;
+      font-size: 1.8rem;
+    }
+
+    .score-display {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 15px;
+      color: #0f172a;
+    }
+
+    .stats-container {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+      background-color: #f8fafc;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .stat-value.correct { color: #16a34a; }
+    .stat-value.incorrect { color: #dc2626; }
+
+    .diagnostics-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #0f172a;
+    }
+
+    .diagnostics-list {
+      list-style-type: disc;
+      padding-left: 20px;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    .modal-footer {
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+      .action-buttons {
+        flex-direction: row;
+      }
+      .btn {
+        padding: 10px 10px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="master.png" alt="Logo Master" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/180x60/001026/ffffff?text=LOGO+MASTER';">
+    <h1>Simulado de Língua Inglesa - 9º Ano (Nível A2)</h1>
+    <div class="nav-grid" id="nav-grid">
+      <!-- Botões de 1 a 10 gerados via JS -->
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="question-header">
+      <span class="question-title" id="question-title">Questão 1 de 10</span>
+    </div>
+
+    <!-- Pinned Text (Exibido nas Questões 1, 2 e 3) -->
+    <div class="pinned-text-box" id="pinned-text-box" style="display: none;">
+      <h4>Texto Base:</h4>
+      <p id="pinned-text-content"></p>
+    </div>
+
+    <!-- Enunciado -->
+    <div class="statement" id="statement-text">
+      <!-- Enunciado será carregado aqui -->
+    </div>
+
+    <!-- Opções -->
+    <div class="options-list" id="options-list">
+      <!-- Opções serão carregadas aqui -->
+    </div>
+
+    <!-- Justificativa -->
+    <div class="feedback-box" id="feedback-box">
+      <strong>Justificativa:</strong> <span id="feedback-text"></span>
+    </div>
+
+    <!-- Botões de Ação: [ Next ] [ Check ] [ Previous ] -->
+    <div class="action-buttons">
+      <button class="btn" id="btn-next" onclick="nextQuestion()">Next</button>
+      <button class="btn" id="btn-check" onclick="checkAnswer()">Check</button>
+      <button class="btn" id="btn-prev" onclick="prevQuestion()">Previous</button>
+    </div>
+  </main>
+
+  <!-- Modal de Resultado Final -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Resultado do Simulado</h2>
+      </div>
+      <div class="score-display" id="score-display">
+        Sua Nota: 0,0 / 10,0
+      </div>
+      <div class="stats-container">
+        <div class="stat-item">
+          <div>Acertos</div>
+          <div class="stat-value correct" id="stat-correct">0 (0%)</div>
+        </div>
+        <div class="stat-item">
+          <div>Erros</div>
+          <div class="stat-value incorrect" id="stat-incorrect">0 (0%)</div>
+        </div>
+      </div>
+      <div class="diagnostics-title">Diagnóstico e Recomendações Pedagógicas:</div>
+      <ul class="diagnostics-list" id="diagnostics-list">
+        <!-- Recomendações dinâmicas -->
+      </ul>
+      <div class="modal-footer">
+        <button class="btn btn-finish" onclick="restartQuiz()">Refazer Simulado</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // TEXTO BASE (NÍVEL A2 CEFR, 3 PARÁGRAFOS COM DADOS REAIS SOBRE EMISSÕES DE CO2 NOS ÚLTIMOS 20 ANOS)
+    const textBase123 = `The Rise of CO2 in Our Atmosphere (2004–2024)\n\n` +
+      `Over the last twenty years, the amount of carbon dioxide (CO2) in the Earth's atmosphere has grown very fast. According to scientists at NOAA (National Oceanic and Atmospheric Administration), global CO2 levels were around 377 parts per million (ppm) in 2004. By 2024, that number reached over 422 ppm. This is an increase of more than 45 ppm in just two decades, making CO2 levels higher than at any time in modern human history.\n\n` +
+      `The main reason for this rapid growth is human activity. Every year, factories, power plants, and cars burn huge amounts of fossil fuels like coal, oil, and natural gas. In addition, cutting down large forests in places like the Amazon reduces the number of trees that naturally absorb carbon from the air. Between 2004 and 2024, annual global CO2 emissions from fossil fuels rose from about 28 billion tons to more than 37 billion tons per year.\n\n` +
+      `This extra CO2 acts like a warm blanket around our planet, trapping heat from the sun. As a result, the last ten years (2015–2024) were the warmest decade ever recorded on Earth. Scientists warn that if countries do not reduce these emissions soon, the planet will face more extreme weather, melting ice, and rising sea levels. Switching to clean energy, such as solar and wind power, is essential to stop this dangerous trend.`;
+
+    // ESTRUTURA DOS DADOS DAS QUESTÕES (Q1-Q3 AVANÇADO SOBRE TEXTO A2; Q4-Q6 FUNÇÃO EM DIÁLOGO; Q7-Q10 ESTRUTURAS)
+    const rawQuestions = [
+      {
+        id: 1,
+        topic: "Compreensão Textual Avançada (A2) - Análise de Dados",
+        pinnedText: textBase123,
+        statement: "Com base nos dados apresentados no primeiro e no segundo parágrafos do texto, qual relação numérica e causal pode ser estabelecida sobre o comportamento do CO₂ entre 2004 e 2024?",
+        correctKey: "D",
+        options: {
+          A: "A concentração atmosférica caiu de 422 ppm para 377 ppm porque o desmatamento na Amazônia diminuiu a emissão de combustíveis fósseis.",
+          B: "As emissões anuais de combustíveis fósseis aumentaram exatamente 45 bilhões de toneladas, igualando a taxa de concentração atmosférica.",
+          C: "O nível de CO₂ na atmosfera cresceu apenas 9 bilhões de ppm em vinte anos, valor inferior aos registros da história humana moderna.",
+          D: "O salto de mais de 45 ppm na concentração atmosférica (de 377 para mais de 422 ppm) acompanhou um aumento anual de cerca de 9 bilhões de toneladas nas emissões por combustíveis fósseis.",
+          E: "A redução das florestas foi a única responsável pelo aumento de 28 bilhões de toneladas na concentração atmosférica medida pela NOAA."
+        },
+        justification: "Resposta correta: D. O texto indica que a concentração subiu de ~377 ppm (2004) para >422 ppm (2024) — uma diferença superior a 45 ppm — ao mesmo tempo em que as emissões anuais passaram de ~28 bilhões para >37 bilhões de toneladas (aumento de ~9 bilhões de toneladas/ano)."
+      },
+      {
+        id: 2,
+        topic: "Compreensão Textual Avançada (A2) - Inferência e Causa",
+        pinnedText: textBase123,
+        statement: "No segundo parágrafo, o autor menciona o corte de grandes florestas ('cutting down large forests'). De acordo com a lógica do texto, por que essa prática agrava o problema descrito no primeiro parágrafo?",
+        correctKey: "B",
+        options: {
+          A: "Porque as árvores liberam grandes quantidades de carvão e gás natural quando são cortadas.",
+          B: "Porque diminui a capacidade natural do planeta de absorver o carbono do ar, somando-se ao gás já emitido pela queima de combustíveis fósseis.",
+          C: "Porque as florestas funcionam como um cobertor quente que impede o calor do sol de chegar ao solo.",
+          D: "Porque o desmatamento substitui a energia solar e eólica por usinas termelétricas na Amazônia.",
+          E: "Porque as árvores absorvem oxigênio e o transformam em 37 bilhões de toneladas de gás carbônico por ano."
+        },
+        justification: "Resposta correta: B. O segundo parágrafo explica que cortar florestas reduz o número de árvores que absorvem naturalmente o carbono do ar ('reduces the number of trees that naturally absorb carbon from the air'), agravando o acúmulo causado pelos combustíveis fósseis."
+      },
+      {
+        id: 3,
+        topic: "Compreensão Textual Avançada (A2) - Síntese e Consequência",
+        pinnedText: textBase123,
+        statement: "Analisando o terceiro parágrafo em conjunto com o restante do texto, qual é a advertência central feita pelos cientistas e a condição necessária para reverter o cenário atual?",
+        correctKey: "E",
+        options: {
+          A: "A última década foi a mais fria já registrada, mas o derretimento do gelo continuará mesmo com o uso exclusivo de energia eólica.",
+          B: "O aquecimento do planeta ocorre apenas pela proximidade do sol, sendo impossível reduzir os níveis de 422 ppm.",
+          C: "O aumento do nível do mar reduzirá a quantidade de CO₂ na atmosfera se as fábricas pararem de usar energia solar.",
+          D: "Os eventos climáticos extremos já foram controlados entre 2015 e 2024 graças à substituição total do petróleo.",
+          E: "O efeito estufa intensificado tornou 2015–2024 a década mais quente já registrada, e a transição para energias limpas é indispensável para evitar eventos climáticos extremos e a elevação dos oceanos."
+        },
+        justification: "Resposta correta: E. O terceiro parágrafo compara o CO₂ a um cobertor quente que retém calor, aponta 2015–2024 como a década mais quente já registrada e alerta que sem a redução das emissões e a troca para energias limpas (solar e eólica), haverá clima extremo, degelo e aumento do nível do mar."
+      },
+      {
+        id: 4,
+        topic: "Zero Conditional - Função Comunicativa",
+        pinnedText: null,
+        statement: "Leia o diálogo abaixo entre dois estudantes durante uma aula de ciências:<div class='dialogue-box'><strong>Lucas:</strong> Why do scientists worry so much about extra CO2 in the air?<br><strong>Maya:</strong> Because <span class='highlight-sentence'>if carbon dioxide traps heat in the atmosphere, the Earth's temperature rises.</span></div>Com base no contexto e na estrutura da <strong>Zero Conditional</strong> utilizada na frase destacada, o que essa sentença expressa?",
+        correctKey: "A",
+        options: {
+          A: "Um fato científico geral e uma verdade universal que sempre acontece sob determinada condição.",
+          B: "Uma situação imaginária ou hipotética que dificilmente acontecerá no futuro.",
+          C: "Um arrependimento sobre uma ação climática que não foi tomada no passado.",
+          D: "Uma promessa pessoal feita por Maya para reduzir a poluição na próxima semana.",
+          E: "Um conselho educado para Lucas mudar seus hábitos de transporte."
+        },
+        justification: "Resposta correta: A. A Zero Conditional (If + Simple Present, Simple Present) é usada para expressar fatos científicos, leis da natureza e verdades gerais que sempre ocorrem quando a condição se cumpre."
+      },
+      {
+        id: 5,
+        topic: "First Conditional - Função Comunicativa",
+        pinnedText: null,
+        statement: "Analise o diálogo a seguir entre uma ativista ambiental e um jornalista:<div class='dialogue-box'><strong>Journalist:</strong> What is your prediction for the next ten years?<br><strong>Activist:</strong> <span class='highlight-sentence'>If countries invest in solar and wind power, global emissions will decrease significantly.</span></div>Considerando o uso da <strong>First Conditional</strong> na frase destacada em amarelo, o que a ativista está expressando?",
+        correctKey: "C",
+        options: {
+          A: "Uma hipótese irreal sobre um planeta que não possui luz solar nem ventos.",
+          B: "Uma rotina diária que já acontecia regularmente há vinte anos.",
+          C: "Uma possibilidade real e provável no futuro, condicionada a uma ação concreta no presente.",
+          D: "Uma certeza absoluta de que as emissões já foram zeradas no ano passado.",
+          E: "Uma ordem direta obrigando o jornalista a construir usinas eólicas."
+        },
+        justification: "Resposta correta: C. A First Conditional (If + Simple Present, will + verbo base) expressa uma possibilidade real e alcançável no futuro caso a condição seja satisfeita."
+      },
+      {
+        id: 6,
+        topic: "Second Conditional - Função Comunicativa",
+        pinnedText: null,
+        statement: "Observe a conversa entre dois amigos observando o trânsito intenso de uma grande metrópole:<div class='dialogue-box'><strong>Pedro:</strong> There are thousands of cars burning fossil fuels right now.<br><strong>Sofia:</strong> Yeah! <span class='highlight-sentence'>If everyone used electric bikes today, our city would have much cleaner air.</span></div>Levando em conta a estrutura da <strong>Second Conditional</strong> na frase destacada, qual é a intenção comunicativa de Sofia?",
+        correctKey: "D",
+        options: {
+          A: "Descrever um fenômeno físico que acontece automaticamente todos os dias na cidade.",
+          B: "Fazer uma previsão realista de que todos os carros serão substituídos ainda hoje à tarde.",
+          C: "Relatar um fato histórico comprovado pela NOAA entre 2004 e 2024.",
+          D: "Expressar uma situação hipotética, imaginária ou improvável no momento presente e seu resultado imaginado.",
+          E: "Dar uma instrução técnica sobre como carregar baterias de bicicletas elétricas."
+        },
+        justification: "Resposta correta: D. A Second Conditional (If + Simple Past, would + verbo base) é empregada para falar de situações irreais, hipotéticas ou improváveis no presente/futuro ('If everyone used...' — o que não acontece na realidade atual)."
+      },
+      {
+        id: 7,
+        topic: "First Conditional - Estrutura Gramatical",
+        pinnedText: null,
+        statement: "Complete a frase abaixo seguindo rigorosamente a estrutura gramatical da <strong>First Conditional</strong>:<br><br><i>\"If factories _______ burning so much coal, the air quality _______ much better.\"</i><br><br>Assinale a alternativa que preenche as lacunas corretamente:",
+        correctKey: "B",
+        options: {
+          A: "stopped / will become",
+          B: "stop / will become",
+          C: "will stop / becomes",
+          D: "stop / would become",
+          E: "stopped / would became"
+        },
+        justification: "Resposta correta: B. Na First Conditional, a oração condicional (com 'If') exige o Simple Present ('stop'), enquanto a oração principal utiliza 'will + verbo no infinitivo sem to' ('will become')."
+      },
+      {
+        id: 8,
+        topic: "Second Conditional - Estrutura Gramatical",
+        pinnedText: null,
+        statement: "Observe a oração hipotética abaixo, estruturada na <strong>Second Conditional</strong>:<br><br><i>\"If I _______ the president of a big company, I _______ all plastic packaging with seaweed material.\"</i><br><br>Qual alternativa apresenta as formas verbais corretas para completar a frase?",
+        correctKey: "E",
+        options: {
+          A: "am / would replace",
+          B: "was / will replace",
+          C: "were / will replaced",
+          D: "will be / replaced",
+          E: "were / would replace"
+        },
+        justification: "Resposta correta: E. Na Second Conditional, usa-se o Simple Past na 'if-clause' (sendo 'were' a forma padrão formal para todas as pessoas do verbo 'to be', inclusive 'I') e 'would + verbo base' ('would replace') na oração principal."
+      },
+      {
+        id: 9,
+        topic: "First Conditional - Forma Negativa e Estrutura",
+        pinnedText: null,
+        statement: "Reescreva mentalmente o alerta ambiental abaixo na forma negativa da <strong>First Conditional</strong>:<br><br><i>\"If governments _______ deforestation in the Amazon, the planet _______ even warmer.\"</i><br><br>Assinale a opção gramaticalmente correta:",
+        correctKey: "A",
+        options: {
+          A: "don't stop / will get",
+          B: "didn't stop / will get",
+          C: "won't stop / gets",
+          D: "don't stop / would get",
+          E: "doesn't stop / will got"
+        },
+        justification: "Resposta correta: A. Como 'governments' está no plural, a negativa do Simple Present na 'if-clause' usa 'don't stop', e a consequência futura na First Conditional usa 'will get'."
+      },
+      {
+        id: 10,
+        topic: "Second Conditional - Ordem Invertida das Orações",
+        pinnedText: null,
+        statement: "Na língua inglesa, podemos inverter a ordem das orações condicionais sem alterar o sentido. Assinale a alternativa que apresenta uma frase <strong>inteiramente correta</strong> na <strong>Second Conditional</strong> com a oração principal vindo primeiro:",
+        correctKey: "C",
+        options: {
+          A: "Sea levels wouldn't rise so fast if humans reduce CO2 emissions right now.",
+          B: "Sea levels won't rise so fast if humans reduced CO2 emissions right now.",
+          C: "Sea levels wouldn't rise so fast if humans reduced CO2 emissions right now.",
+          D: "Sea levels wouldn't rose so fast if humans reduced CO2 emissions right now.",
+          E: "Sea levels didn't rise so fast if humans would reduce CO2 emissions right now."
+        },
+        justification: "Resposta correta: C. Na Second Conditional invertida, a oração principal vem primeiro com 'would/wouldn't + verbo base' ('wouldn't rise'), seguida pela 'if-clause' no Simple Past ('if humans reduced'), sem necessidade de vírgula entre elas."
+      }
+    ];
+
+    // ESTADO DA APLICAÇÃO E EMBARALHAMENTO DO GABARITO (Fisher-Yates)
+    let processedQuestions = [];
+    let userAnswers = {};
+    let checkedQuestions = {};
+    let currentQuestionIndex = 0;
+
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function initQuizData() {
+      processedQuestions = rawQuestions.map((q) => {
+        const originalKeys = ['A', 'B', 'C', 'D', 'E'];
+        const optionsList = originalKeys.map(key => ({
+          originalKey: key,
+          text: q.options[key]
+        }));
+
+        // Embaralhamento das opções
+        const shuffledOptions = shuffleArray(optionsList);
+
+        const newLetterLabels = ['A', 'B', 'C', 'D', 'E'];
+        let mappedCorrectLetter = '';
+
+        const finalOptions = shuffledOptions.map((opt, index) => {
+          const currentLabel = newLetterLabels[index];
+          if (opt.originalKey === q.correctKey) {
+            mappedCorrectLetter = currentLabel;
+          }
+          return {
+            label: currentLabel,
+            text: opt.text,
+            originalKey: opt.originalKey
+          };
+        });
+
+        return {
+          ...q,
+          displayOptions: finalOptions,
+          correctDisplayLetter: mappedCorrectLetter
+        };
+      });
+    }
+
+    function buildNavGrid() {
+      const navGrid = document.getElementById('nav-grid');
+      navGrid.innerHTML = '';
+      for (let i = 0; i < processedQuestions.length; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'nav-btn';
+        btn.id = `nav-btn-${i}`;
+        btn.innerText = i + 1;
+        btn.onclick = () => jumpToQuestion(i);
+        navGrid.appendChild(btn);
+      }
+      updateNavStatus();
+    }
+
+    function updateNavStatus() {
+      for (let i = 0; i < processedQuestions.length; i++) {
+        const btn = document.getElementById(`nav-btn-${i}`);
+        if (!btn) continue;
+        btn.classList.remove('active', 'correct', 'incorrect');
+
+        if (i === currentQuestionIndex) {
+          btn.classList.add('active');
+        }
+
+        if (checkedQuestions[i]) {
+          const isCorrect = userAnswers[i] === processedQuestions[i].correctDisplayLetter;
+          if (isCorrect) {
+            btn.classList.add('correct');
+          } else {
+            btn.classList.add('incorrect');
+          }
+        }
+      }
+    }
+
+    function renderQuestion(index) {
+      const q = processedQuestions[index];
+
+      document.getElementById('question-title').innerText = `Questão ${index + 1} de 10`;
+
+      // Pinned Text Box para Q1, Q2 e Q3
+      const pinnedBox = document.getElementById('pinned-text-box');
+      const pinnedContent = document.getElementById('pinned-text-content');
+      if (q.pinnedText) {
+        pinnedContent.innerText = q.pinnedText;
+        pinnedBox.style.display = 'block';
+      } else {
+        pinnedBox.style.display = 'none';
+      }
+
+      document.getElementById('statement-text').innerHTML = q.statement.replace(/\n/g, '<br>');
+
+      const optionsContainer = document.getElementById('options-list');
+      optionsContainer.innerHTML = '';
+
+      const isChecked = checkedQuestions[index];
+
+      q.displayOptions.forEach((opt) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'option-item';
+
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = `option-${index}`;
+        radio.value = opt.label;
+        radio.id = `opt-${opt.label}`;
+        radio.disabled = !!isChecked;
+
+        if (userAnswers[index] === opt.label) {
+          radio.checked = true;
+          itemDiv.classList.add('selected');
+        }
+
+        if (isChecked) {
+          if (opt.label === q.correctDisplayLetter) {
+            itemDiv.classList.add('correct-bg');
+          } else if (userAnswers[index] === opt.label) {
+            itemDiv.classList.add('incorrect-bg');
+          }
+        } else {
+          itemDiv.onclick = () => selectOption(index, opt.label);
+        }
+
+        const labelSpan = document.createElement('span');
+        labelSpan.className = 'option-text';
+        labelSpan.innerHTML = `<strong>${opt.label})</strong> ${opt.text}`;
+
+        itemDiv.appendChild(radio);
+        itemDiv.appendChild(labelSpan);
+        optionsContainer.appendChild(itemDiv);
+      });
+
+      const feedbackBox = document.getElementById('feedback-box');
+      const feedbackText = document.getElementById('feedback-text');
+      if (isChecked) {
+        let textJust = q.justification;
+        textJust = textJust.replace(/Resposta correta: [A-E]\./, `Resposta correta: ${q.correctDisplayLetter}.`);
+        feedbackText.innerText = textJust;
+        feedbackBox.classList.add('show');
+      } else {
+        feedbackBox.classList.remove('show');
+      }
+
+      const btnCheck = document.getElementById('btn-check');
+      btnCheck.disabled = !userAnswers[index] || isChecked;
+
+      const btnNext = document.getElementById('btn-next');
+      if (index === processedQuestions.length - 1) {
+        btnNext.innerText = 'Finish';
+        btnNext.classList.add('btn-finish');
+      } else {
+        btnNext.innerText = 'Next';
+        btnNext.classList.remove('btn-finish');
+      }
+
+      const btnPrev = document.getElementById('btn-prev');
+      btnPrev.disabled = index === 0;
+
+      updateNavStatus();
+    }
+
+    function selectOption(qIndex, label) {
+      if (checkedQuestions[qIndex]) return;
+      userAnswers[qIndex] = label;
+
+      const items = document.querySelectorAll('.option-item');
+      items.forEach(item => item.classList.remove('selected'));
+
+      const radio = document.getElementById(`opt-${label}`);
+      if (radio) {
+        radio.checked = true;
+        radio.closest('.option-item').classList.add('selected');
+      }
+
+      document.getElementById('btn-check').disabled = false;
+    }
+
+    function checkAnswer() {
+      if (!userAnswers[currentQuestionIndex]) return;
+      checkedQuestions[currentQuestionIndex] = true;
+      renderQuestion(currentQuestionIndex);
+    }
+
+    function jumpToQuestion(index) {
+      currentQuestionIndex = index;
+      renderQuestion(currentQuestionIndex);
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIndex < processedQuestions.length - 1) {
+        currentQuestionIndex++;
+        renderQuestion(currentQuestionIndex);
+      } else {
+        finishQuiz();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        renderQuestion(currentQuestionIndex);
+      }
+    }
+
+    function finishQuiz() {
+      let totalCorrect = 0;
+      let topicErrors = {};
+      let topicTotals = {};
+
+      processedQuestions.forEach((q, idx) => {
+        const topic = q.topic;
+        if (!topicTotals[topic]) {
+          topicTotals[topic] = 0;
+          topicErrors[topic] = 0;
+        }
+        topicTotals[topic]++;
+
+        const userAns = userAnswers[idx];
+        if (userAns === q.correctDisplayLetter) {
+          totalCorrect++;
+        } else {
+          topicErrors[topic]++;
+        }
+      });
+
+      const totalQuestions = processedQuestions.length;
+      const totalIncorrect = totalQuestions - totalCorrect;
+      
+      const score = (totalCorrect * 1.0).toFixed(1);
+
+      const correctPct = Math.round((totalCorrect / totalQuestions) * 100);
+      const incorrectPct = Math.round((totalIncorrect / totalQuestions) * 100);
+
+      document.getElementById('score-display').innerText = `Sua Nota: ${score.replace('.', ',')} / 10,0`;
+      document.getElementById('stat-correct').innerText = `${totalCorrect} (${correctPct}%)`;
+      document.getElementById('stat-incorrect').innerText = `${totalIncorrect} (${incorrectPct}%)`;
+
+      const diagnosticsList = document.getElementById('diagnostics-list');
+      diagnosticsList.innerHTML = '';
+
+      let needsRevision = false;
+
+      for (const topic in topicTotals) {
+        const errors = topicErrors[topic];
+        const total = topicTotals[topic];
+        const errorPct = (errors / total) * 100;
+
+        if (errorPct > 30) {
+          needsRevision = true;
+          const li = document.createElement('li');
+          let recommendationText = "";
+
+          if (topic.includes("Compreensão")) {
+            recommendationText = "<strong>Compreensão Textual Avançada (A2):</strong> Praticar a leitura detalhada relacionando dados numéricos (ppm, toneladas, décadas) e relações de causa e consequência no texto.";
+          } else if (topic.includes("Zero Conditional")) {
+            recommendationText = "<strong>Zero Conditional:</strong> Revisar o uso de <em>If + Simple Present, Simple Present</em> para expressar fatos científicos e verdades gerais.";
+          } else if (topic.includes("First Conditional")) {
+            recommendationText = `<strong>${topic}:</strong> Revisar a estrutura <em>If + Simple Present, will + verbo base</em> e sua função de expressar possibilidades reais no futuro.`;
+          } else if (topic.includes("Second Conditional")) {
+            recommendationText = `<strong>${topic}:</strong> Revisar a estrutura <em>If + Simple Past (were/verbo no passado), would + verbo base</em> e sua função de expressar situações hipotéticas ou irreais.`;
+          } else {
+            recommendationText = `<strong>${topic}:</strong> Recomenda-se revisar este conteúdo específico (Percentual de erro: ${Math.round(errorPct)}%).`;
+          }
+
+          li.innerHTML = recommendationText;
+          diagnosticsList.appendChild(li);
+        }
+      }
+
+      if (!needsRevision) {
+        const li = document.createElement('li');
+        li.innerHTML = "<strong>Parabéns!</strong> Você demonstrou excelente domínio em todos os tópicos avaliados (taxa de erro inferior a 30%). Continue praticando!";
+        diagnosticsList.appendChild(li);
+      }
+
+      document.getElementById('modal-overlay').style.display = 'flex';
+    }
+
+    function restartQuiz() {
+      userAnswers = {};
+      checkedQuestions = {};
+      currentQuestionIndex = 0;
+      document.getElementById('modal-overlay').style.display = 'none';
+      initQuizData();
+      buildNavGrid();
+      renderQuestion(0);
+    }
+
+    window.onload = function() {
+      initQuizData();
+      buildNavGrid();
+      renderQuestion(0);
+    };
+  </script>
+</body>
+</html>
